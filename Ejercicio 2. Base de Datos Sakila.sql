@@ -65,8 +65,39 @@ FROM customer c
 INNER JOIN rental r ON c.customer_id = r.customer_id
 GROUP BY  c.customer_id, c.first_name, c.last_name
 ORDER BY Cantidad_películas DESC;
+
 -- 11.Encuentra la cantidad total de películas alquiladas por categoría y muestra el nombre de la categoríajunto con el recuento de alquileres.
+SELECT c.name as Categoría, COUNT(r.rental_id) as Alquileres_total
+FROM category c 
+INNER JOIN film_category fc ON c.category_id = fc.category_id
+INNER JOIN film f ON fc.film_id = f.film_id
+INNER JOIN inventory i ON f.film_id = i.film_id
+INNER JOIN rental r ON i.inventory_id = r.inventory_id
+GROUP BY c.category_id, c.name
+ORDER BY Alquileres_total DESC;
+
 -- 12.Encuentra el promedio de duración de las películas para cada clasificación de la tabla film y muestra la clasificación junto con el promedio de duración.
+SELECT c.name, ROUND(AVG(F.length)) AS Media_duración
+FROM category c
+INNER JOIN film_category fc ON c.category_id = fc.category_id
+INNER JOIN film f ON fc.film_id = f.film_id
+GROUP BY c.name
+ORDER BY Media_duración DESC;
+
 -- 13.Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love".
+SELECT a.first_name, a.last_name, f.title
+FROM actor a
+INNER JOIN film_actor fa ON a.actor_id = fa.actor_id
+INNER JOIN film f ON fa.film_id = f.film_id
+WHERE f.title LIKE '%Indian Love%';
+
 -- 14.Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción.
+SELECT title, description
+FROM film
+WHERE description LIKE '%dog%'
+OR description LIKE '%CAT%';
+
 -- 15.Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
+SELECT title, release_year
+FROM film 
+WHERE release_year BETWEEN 2005 AND 2010;
